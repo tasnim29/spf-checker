@@ -2,6 +2,9 @@ import React, { useState } from "react";
 
 const Form = () => {
   const [domain, setDomain] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [spfRecords, setSpfRecords] = useState([]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -24,6 +27,25 @@ const Form = () => {
           Check SPF
         </button>
       </form>
+
+      {/* Loading  */}
+      {loading && <p>Loading...</p>}
+
+      {/* Error message */}
+      {error && <p className="text-red-500">{error}</p>}
+
+      {/* result */}
+
+      {spfRecords.length > 0 && (
+        <div>
+          <h1>SPF Records:</h1>
+          <ul className="space-y-3">
+            {spfRecords.map((record, index) => (
+              <li key={index}>{record}</li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 };
