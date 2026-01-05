@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { designedSpfRecord } from "../HelperFunction/Helper";
 import Loader from "./Loader/Loader";
 
@@ -29,10 +29,14 @@ const Form = () => {
         .map((r) => r.data.replace(/"/g, ""))
         .filter((txt) => txt.toLowerCase().startsWith("v=spf1"));
 
-      setExpandedIncludes((prev) => ({
-        ...prev,
-        [includeDomain]: spf.length ? spf : ["No SPF found"],
-      }));
+      setExpandedIncludes((prev) => {
+        const newData = {
+          ...prev,
+          [includeDomain]: spf.length ? spf : ["No SPF found"],
+        };
+        localStorage.setItem("expandedIncludes", JSON.stringify(newData));
+        return newData;
+      });
     } catch {
       setExpandedIncludes((prev) => ({
         ...prev,
@@ -78,6 +82,7 @@ const Form = () => {
       const spf = txtRecords.filter((txt) =>
         txt.toLowerCase().startsWith("v=spf1")
       );
+      console.log(spf);
 
       if (spf.length === 0) {
         setError(" No SPF record found for this domain");
@@ -85,7 +90,8 @@ const Form = () => {
       }
 
       setSpfRecords(spf);
-      console.log(spf);
+
+      localStorage.setItem("spfRecords", JSON.stringify(spf));
     } catch (error) {
       setError("Failed to fetch DNS records");
       console.log(error);
@@ -94,9 +100,17 @@ const Form = () => {
     }
   };
 
+  useEffect(() => {
+    const savedSpf = localStorage.getItem("spfRecords");
+    const savedIncludes = localStorage.getItem("expandedIncludes");
+
+    if (savedSpf) setSpfRecords(JSON.parse(savedSpf));
+    if (savedIncludes) setExpandedIncludes(JSON.parse(savedIncludes));
+  }, []);
+
   return (
     <div className="max-w-4xl px-4 py-10 md:py-16 mx-auto bg-white border-2 border-gray-300 shadow-md rounded-lg">
-      <h1 className="text-3xl md:text-4xl font-bold text-center mb-6 text-gray-800">
+      <h1 className="text-3xl md:text-4xl font-bold text-center mb-10 text-gray-800">
         SPF Checker
       </h1>
 
@@ -117,6 +131,21 @@ const Form = () => {
           className="px-6 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-purple-600 cursor-pointer"
         >
           Check SPF
+        </button>
+
+        <button
+          type="button"
+          className="px-6 py-2 bg-purple-600 text-white font-medium rounded-md hover:bg-blue-600 cursor-pointer"
+          onClick={() => {
+            setDomain("");
+            setSpfRecords([]);
+            setExpandedIncludes({});
+            setError("");
+            localStorage.removeItem("spfRecords");
+            localStorage.removeItem("expandedIncludes");
+          }}
+        >
+          Clear
         </button>
       </form>
 
@@ -149,7 +178,7 @@ const Form = () => {
                 {Object.entries(expandedIncludes).map(([domain, records]) => (
                   <div
                     key={domain}
-                    className="ml-4 mt-3 pl-4 border-l-2 border-blue-300"
+                    className="ml-4 mt-3 p-4 shadow-md border-blue-300"
                   >
                     <p className="font-medium text-blue-600 mb-1">
                       Included SPF: {domain}
