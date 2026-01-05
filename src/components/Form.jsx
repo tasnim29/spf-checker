@@ -6,8 +6,64 @@ const Form = () => {
   const [error, setError] = useState("");
   const [spfRecords, setSpfRecords] = useState([]);
 
-  const handleSubmit = (e) => {
+  // check domain is valid or not
+  const isValidDomain = (domain) => {
+    const domainRegex = /^[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)+$/;
+    return domainRegex.test(domain);
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    setError("");
+    setSpfRecords([]);
+
+    const trimmedDomain = domain.trim();
+
+    if (!isValidDomain(trimmedDomain)) {
+      setError("Invalid domain format");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      const response = await fetch(
+        `https://dns.google/resolve?name=${trimmedDomain}&type=TXT`
+      );
+
+      const data = await response.json();
+      const answer = data.Answer;
+
+      console.log(data);
+
+      if (data.Status !== 0 || !data.Answer) {
+        setError(" Domain not found");
+        return;
+      }
+
+      //Extract TXT records
+
+      const txtRecords = answer
+        .filter((record) => record.type === 16)
+        .map((record) => record.data.replace(/"/g, ""));
+
+      const spf = txtRecords.filter((txt) =>
+        txt.toLowerCase().startsWith("v=spf1")
+      );
+
+      if (spf.length === 0) {
+        setError(" No SPF record found for this domain");
+        return;
+      }
+
+      setSpfRecords(spf);
+    } catch (error) {
+      setError("Failed to fetch DNS records");
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
