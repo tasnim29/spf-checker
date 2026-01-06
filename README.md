@@ -33,9 +33,6 @@ npm run dev
 
 ### Limitations
 
--When you click the expanded spf records means when you click include and it will expand , you will see some expanded spf records.But then again when you search another domain, the expanded spf records will remain in display.
-This is a UI state management issue.This can be fixed.
-
 -DNS results depend on Google DNS availability.
 
--No backend — all logic runs on the client side.
+-No backend all logic runs on the client side.

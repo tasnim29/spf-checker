@@ -7,7 +7,7 @@ export const designedSpfRecord = (record, fetchIncludedSpf) => {
         <button
           key={index}
           onClick={() => fetchIncludedSpf(domain)}
-          className="text-blue-600 underline mb-1 block hover:text-purple-600 cursor-pointer"
+          className="text-green-500 underline mb-1 block hover:text-green-800 cursor-pointer"
         >
           {part}
         </button>
@@ -17,7 +17,7 @@ export const designedSpfRecord = (record, fetchIncludedSpf) => {
     // redirect
     if (part.startsWith("redirect=")) {
       return (
-        <span key={index} className="text-purple-600 font-semibold">
+        <span key={index} className="text-green-500 font-semibold">
           {part}{" "}
         </span>
       );

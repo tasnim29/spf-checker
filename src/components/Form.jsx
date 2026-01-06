@@ -114,7 +114,7 @@ const Form = () => {
   return (
     <div className="max-w-4xl px-4 py-10 md:py-16 mx-auto bg-white border-2 border-gray-300 shadow-md rounded-lg">
       <h1 className="text-3xl md:text-4xl font-bold text-center mb-10 text-gray-800">
-        SPF Checker
+        Check SPF Records
       </h1>
 
       {/* Form */}
@@ -131,14 +131,14 @@ const Form = () => {
         />
         <button
           type="submit"
-          className="px-6 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-purple-600 cursor-pointer"
+          className="px-6 py-2 bg-gray-800 text-white font-medium rounded-md hover:scale-105 transition duration-300 cursor-pointer"
         >
           Check SPF
         </button>
 
         <button
           type="button"
-          className="px-6 py-2 bg-purple-600 text-white font-medium rounded-md hover:bg-blue-600 cursor-pointer"
+          className="px-6 py-2 bg-green-500 text-white font-medium rounded-md hover:scale-105 transition duration-300 cursor-pointer"
           onClick={() => {
             setDomain("");
             setSpfRecords([]);
@@ -155,7 +155,6 @@ const Form = () => {
       {/* Loading */}
       {loading && <Loader />}
 
-      {/* Error */}
       {error && (
         <p className="text-center text-red-500 font-medium ">{error}</p>
       )}
@@ -163,14 +162,11 @@ const Form = () => {
       {/* SPF Records */}
       {spfRecords.length > 0 && (
         <div>
-          <h2 className="text-xl font-semibold mb-3 text-gray-700">
-            SPF Records:
-          </h2>
           <ul className="space-y-4">
             {spfRecords.map((record, index) => (
               <li
                 key={index}
-                className="bg-gray-50 p-4 rounded-md shadow-sm border-2 border-gray-200"
+                className=" p-4 rounded-md shadow-sm border-2 border-gray-200"
               >
                 {/* Main SPF record */}
                 <div className="font-mono text-gray-800 mb-2">
@@ -183,14 +179,14 @@ const Form = () => {
                     key={domain}
                     className="ml-4 mt-3 p-4 shadow-md border-blue-300"
                   >
-                    <p className="font-medium text-blue-600 mb-1">
+                    <p className="font-medium text-gray-800 mb-1">
                       Included SPF: {domain}
                     </p>
                     <ul className="space-y-1">
                       {records.map((r, i) => (
                         <li
                           key={i}
-                          className="text-sm text-gray-700 bg-blue-50 px-2 py-1 rounded hover:bg-blue-100 transition"
+                          className="text-sm text-white font-semibold bg-gray-800 p-2 rounded hover:scale-105 transition duration-300"
                         >
                           {r}
                         </li>
