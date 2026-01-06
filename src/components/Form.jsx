@@ -51,6 +51,9 @@ const Form = () => {
     setError("");
     setSpfRecords([]);
 
+    setExpandedIncludes({});
+    localStorage.removeItem("expandedIncludes");
+
     const trimmedDomain = domain.trim();
 
     if (!isValidDomain(trimmedDomain)) {
